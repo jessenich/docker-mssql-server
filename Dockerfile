@@ -21,35 +21,29 @@ ENV MSSQL_PID=Developer \
 USER root
 
 ENV MSSQL_SYSTEM_DIR="/var/opt/mssql" \
-    MSSQL_BACKUP_DIR="/var/opt/mssql/backup" \
-    MSSQL_DATA_DIR="/var/opt/mssql/data" \
-    MSSQL_LOG_DIR="/var/opt/mssql/log"
+    MSSQL_BACKUP_DIR="/var/opt/mssql/backup/" \
+    MSSQL_DATA_DIR="/var/opt/mssql/data/" \
+    MSSQL_LOG_DIR="/var/opt/mssql/log/"
 
+ADD https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb packages-microsoft-prod.deb
 COPY ./lxfs /
 RUN export DEBIAN_NONINTERACTIVE=true && \
-    apt update && \
-    apt upgrade && \
-    apt install -y \
+    apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y \
         wget \
         apt-transport-https \
         software-properties-common && \
-    wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb && \
     dpkg -i packages-microsoft-prod.deb && \
-    apt update && \
+    apt-get update && \
     add-apt-repository universe && \
-    apt install -y \
+    apt-get install -y \
         powershell && \
     rm -f packages-microsoft-prod.deb 2>/dev/null && \
-    # Create volume directories
-    test ! -d "${MSSQL_BACKUP_DIR}" && \
-        mkdir -p "${MSSQL_BACKUP_DIR}" && \
-        chown mssql "${MSSQL_BACKUP_DIR}"; \
-    test ! -d "${MSSQL_DATA_DIR}" && \
-        mkdir -p "${MSSQL_DATA_DIR}}" && \
-        chown mssql "${MSSQL_DATA_DIR}"; \
-    test ! -d "${MSSQL_LOG_DIR}" && \
-        mkdir -p "${MSSQL_LOG_DIR}}" && \
-        chown mssql "${MSSQL_LOG_DIR}";
+    /bin/bash /root/mkchowndir.sh mssql "${MSSQL_BACKUP_DIR}" && \
+    /bin/bash /root/mkchowndir.sh mssql "${MSSQL_DATA_DIR}" && \
+    /bin/bash /root/mkchowndir.sh mssql "${MSSQL_LOG_DIR}" && \
+    rm -rf /tmp/buildx;
 
 VOLUME "${MSSQL_SYSTEM_DIR}" \
        "${MSSQL_BACKUP_DIR}" \

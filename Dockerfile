@@ -1,6 +1,9 @@
 ARG VARIANT="2019-latest"
 FROM mcr.microsoft.com/mssql/server:"${VARIANT}" as build
 
+LABEL maintainer="Jesse N. <jesse@keplerdev.com>"
+LABEL org.opencontainers.image.source="https://github.com/jessenich/docker-mssql-server"
+
 # Sets the database connection variables.
 ENV DB_MSSQL_USER=sa
 ENV DB_MSSQL_PASSWORD=Test123!!

@@ -21,10 +21,10 @@ ENV MSSQL_BACKUP_DIR="/var/opt/mssql/backup"
 ENV MSSQL_DATA_DIR="/var/opt/mssql/data"
 ENV MSSQL_LOG_DIR="/var/opt/mssql/log"
 
-WORKDIR /tmp
-COPY lxfs/create-dir-struct.sh ./create-dir-struct.sh
-RUN chmod +x ./create-dir-struct.sh && \
-    /bin/bash create-dir-struct.sh && \
+RUN mkdir -p /tmp/docker-build
+COPY ./lxfs/create-dir-struct.sh /tmp/docker-build/create-dir-struct.sh
+RUN chmod +x /tmp/docker-build/create-dir-struct.sh && \
+    bash /tmp/docker-build/create-dir-struct.sh && \
     rm ./create-dir-struct.sh
 
 # Sets the variable to inform Docker that the container

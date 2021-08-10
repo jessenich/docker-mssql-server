@@ -86,8 +86,8 @@ jobs:
             type=semver,enable=${{ startsWith(github.ref, 'refs/tags/') }},pattern={{major}}.{{minor}}.{{patch}}
             type=semver,enable=${{ startsWith(github.ref, 'refs/tags/') }},pattern={{major}}.{{minor}}
             type=semver,enable=${{ startsWith(github.ref, 'refs/tags/') }},pattern={{major}}
-            type=edge,enable=${{ !startsWith(github.ref, 'refs/tags/') }},priority=700,prefix={{branch}}-,suffix=-latest,branch=$repo.default_branch
-            type=edge,enable=${{ !startsWith(github.ref, 'refs/tags/') }},priority=700,prefix={{branch}}-,suffix=-{{sha}},branch=$repo.default_branch
+            type=edge,enable=${{ !startsWith(github.ref, 'refs/tags/') }},prefix={{branch}}-,suffix=-latest,branch=main
+            type=edge,enable=${{ !startsWith(github.ref, 'refs/tags/') }},prefix={{branch}}-,suffix=-{{sha}},branch=main
           flavor: latest=auto
           labels: ${{ env.LABELS }}
 

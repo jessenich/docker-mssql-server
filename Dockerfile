@@ -41,15 +41,15 @@ RUN export DEBIAN_NONINTERACTIVE=true && \
         powershell && \
     rm -f packages-microsoft-prod.deb 2>/dev/null && \
     # Create volume directories
-    test -d "${MSSQL_BACKUP_DIR}" || \
+    test ! -d "${MSSQL_BACKUP_DIR}" && \
         mkdir -p "${MSSQL_BACKUP_DIR}" && \
-        chown mssql "${MSSQL_BACKUP_DIR}" && \
-    test -d "${MSSQL_DATA_DIR}" || \
+        chown mssql "${MSSQL_BACKUP_DIR}"; \
+    test ! -d "${MSSQL_DATA_DIR}" && \
         mkdir -p "${MSSQL_DATA_DIR}}" && \
-        chown mssql "${MSSQL_DATA_DIR}" && \
-    test -d "${MSSQL_LOG_DIR}" || \
+        chown mssql "${MSSQL_DATA_DIR}"; \
+    test ! -d "${MSSQL_LOG_DIR}" && \
         mkdir -p "${MSSQL_LOG_DIR}}" && \
-        chown mssql "${MSSQL_LOG_DIR}"
+        chown mssql "${MSSQL_LOG_DIR}";
 
 VOLUME "${MSSQL_SYSTEM_DIR}" \
        "${MSSQL_BACKUP_DIR}" \

@@ -13,13 +13,16 @@ ENV SA_PASSWORD=$DB_MSSQL_PASSWORD
 
 USER root
 
-ENV MSSQL_BACKUP_DIR="/var/opt/sqlserver"
-ENV MSSQL_DATA_DIR="/var/opt/sqlserver"
-ENV MSSQL_LOG_DIR="/var/opt/sqlserver"
+ENV MSSQL_SYSTEM_DIR="/var/opt/mssql"
+ENV MSSQL_BACKUP_DIR="/var/opt/mssql/backup"
+ENV MSSQL_DATA_DIR="/var/opt/mssql/data"
+ENV MSSQL_LOG_DIR="/var/opt/mssql/log"
 
-COPY create-dir-stuct.sh /tmp/create-dir-struct;
-RUN /bin/bash /tmp/create-dir-struct && \
-    rm /tmp/create-dir-struct
+WORKDIR /tmp
+COPY lxfs/create-dir-struct.sh ./create-dir-struct.sh
+RUN chmod +x ./create-dir-struct.sh && \
+    /bin/bash create-dir-struct.sh && \
+    rm ./create-dir-struct.sh
 
 # Sets the variable to inform Docker that the container
 # listens on the specified network port.
@@ -27,7 +30,7 @@ EXPOSE 1433/tcp
 
 # Expose port for SQL Server Agent
 EXPOSE 1434/udp
-VOLUME [ "/var/opt/mssql/data" ]
 
 USER mssql
+WORKDIR /home/mssql
 CMD [ "/opt/mssql/bin/sqlservr" ]

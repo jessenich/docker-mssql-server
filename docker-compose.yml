@@ -1,4 +1,7 @@
-version: 3.8
+# Copyright (c) 2021 Jesse N. <jesse@keplerdev.com>
+# This work is licensed under the terms of the MIT license. For a copy, see <https://opensource.org/licenses/MIT>.
+
+version: "3.8"
 
 services:
   sqlserver01:
@@ -6,7 +9,7 @@ services:
     restart: unless-stopped
     stop_grace_period: 1m30s
     network_mode: bridge
-    env-file:
+    env_file:
       - sqlserver.env
       - .secrets.env
     build:
@@ -17,7 +20,7 @@ services:
       labels:
         maintainer: Jesse N. <jesse@keplerdev.com>
         com.keplerdev.maintainer: Jesse N. <jesse@keplerdev.com>
-        com.keplerdev.
+        com.keplerdev.image.base: "mcr.microsoft.com/mssql/server:2019-latest"
     logging:
       driver: json-file
       options:

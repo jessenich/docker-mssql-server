@@ -12,6 +12,8 @@ on:
       - "v*"
       - "*-prerelease-*"
       - "*-rc-*"
+      - "*-alpha-*"
+      - "*-beta-*"
 
 env:
   DOCKERHUB_LIBRARY: jessenich91

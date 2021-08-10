@@ -34,10 +34,6 @@ jobs:
         "com.keplerdev.metadata.build.run-number: ${{ github.run_number }}"
         "com.keplerdev.metadata.builder.workflow.name: ${{ github.workflow }}"
 
-    permissions:
-      contents: read
-      packages: write
-
     steps:
       - name: Checkout
         uses: actions/checkout@v2

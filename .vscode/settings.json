@@ -5,10 +5,12 @@
         "DHCR",
         "DOCKERHUB",
         "Deletable",
+        "SQLPAD",
         "ghcr",
         "jessenich",
         "keplerdev",
         "nodocs",
-        "opencontainers"
+        "opencontainers",
+        "sqlserver"
     ]
 }

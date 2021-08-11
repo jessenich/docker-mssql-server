@@ -11,7 +11,7 @@ services:
     network_mode: bridge
     env_file:
       - sqlserver.env
-      - .secrets.env
+      - sqlserver.secrets.env
     build:
       dockerfile: Dockerfile
       context: .
@@ -35,8 +35,20 @@ services:
       - "sqldblog:/var/opt/mssql/log"
       - "sqldbbackup:/var/opt/mssql/backup"
 
+  sqlpad:
+    image: sqlpad/sqlpad:latest
+    hostname: 'sqlpad'
+    ports:
+      - '3010:3000'
+    env_file:
+      - sqlpad.env
+      - sqlpad.secrets.env
+    volumes:
+      - sqlpad:/var/lib/sqlpad
+
 volumes:
   sqldbsystem:
   sqldbdata:
   sqldblog:
   sqldbbackup:
+  sqlpad:

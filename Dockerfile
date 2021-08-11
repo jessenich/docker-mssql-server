@@ -6,7 +6,7 @@ LABEL org.opencontainers.image.source="https://github.com/jessenich/docker-mssql
 
 # Sets the database connection variables.
 ENV DB_MSSQL_USER=sa \
-    DB_MSSQL_PASSWORD=Test123!! \
+    DB_MSSQL_PASSWORD= \
     DB_MSSQL_DATABASE=master \
     TZ="${TZ:-America/NewYork}" \
     TERM="xterm-256color" \
@@ -28,21 +28,30 @@ ENV MSSQL_SYSTEM_DIR="/var/opt/mssql" \
 ADD https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb packages-microsoft-prod.deb
 COPY ./lxfs /
 RUN export DEBIAN_NONINTERACTIVE=true && \
+    chmod +x /usr/sbin/adduser.sh && \
+    chmod +x /usr/sbin/mkchowndir.sh && \
     apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y \
         wget \
+        curl \
         apt-transport-https \
-        software-properties-common && \
+        software-properties-common \
+        sqlite3 \
+        sqlite3-doc \
+        sqlite3-pcre \
+        sudo \
+        zsh \
+        zsh-doc && \
     dpkg -i packages-microsoft-prod.deb && \
     apt-get update && \
     add-apt-repository universe && \
     apt-get install -y \
         powershell && \
     rm -f packages-microsoft-prod.deb 2>/dev/null && \
-    /bin/bash /root/mkchowndir.sh mssql "${MSSQL_BACKUP_DIR}" && \
-    /bin/bash /root/mkchowndir.sh mssql "${MSSQL_DATA_DIR}" && \
-    /bin/bash /root/mkchowndir.sh mssql "${MSSQL_LOG_DIR}" && \
+    /bin/bash /usr/sbin/mkchowndir.sh mssql "${MSSQL_BACKUP_DIR}" && \
+    /bin/bash /usr/sbin/mkchowndir.sh mssql "${MSSQL_DATA_DIR}" && \
+    /bin/bash /usr/sbin/mkchowndir.sh mssql "${MSSQL_LOG_DIR}" && \
     rm -rf /tmp/buildx;
 
 VOLUME "${MSSQL_SYSTEM_DIR}" \

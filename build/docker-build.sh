@@ -68,6 +68,8 @@ build() {
         -f "${repository_root}/Dockerfile" \
         -t "${library}/${repository}:${tag1}" \
         -t "${library}/${repository}:${tag2}" \
+        -t "ghcr.io/${library}/${repository}:${tag1}" \
+        -t "ghcr.io/${library}/${repository}:${tag2}" \
         --build-arg "VARIANT=${variant}" \
         --push \
         "${repository_root}"

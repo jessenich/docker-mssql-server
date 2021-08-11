@@ -43,6 +43,8 @@ RUN export DEBIAN_NONINTERACTIVE=true && \
         sudo \
         zsh \
         zsh-doc && \
+    chsh -s /bin/zsh root && \
+    chsh -s /bin/zsh mssql && \
     dpkg -i packages-microsoft-prod.deb && \
     apt-get update && \
     add-apt-repository universe && \

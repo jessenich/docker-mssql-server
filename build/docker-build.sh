@@ -8,6 +8,8 @@ registry= ;
 registry_username= ;
 registry_password= ;
 registry_password_stdin= ;
+ghcr_library="jessenich";
+ghcr_repository="mssql-server";
 library="jessenich91";
 repository="mssql-server";
 builder="default";
@@ -68,8 +70,8 @@ build() {
         -f "${repository_root}/Dockerfile" \
         -t "${library}/${repository}:${tag1}" \
         -t "${library}/${repository}:${tag2}" \
-        -t "ghcr.io/${library}/${repository}:${tag1}" \
-        -t "ghcr.io/${library}/${repository}:${tag2}" \
+        -t "ghcr.io/${ghcr_library}/${ghcr_repository}:${tag1}" \
+        -t "ghcr.io/${ghcr_library}/${ghcr_repository}:${tag2}" \
         --build-arg "VARIANT=${variant}" \
         --push \
         "${repository_root}"
@@ -95,27 +97,27 @@ main() {
 
             -i | --image-version)
                 image_version="$2";
-                shift;
+                shift 2;
             ;;
 
             -s | --mssql-variant)
                 variant="$2";
-                shift;
+                shift 2;
             ;;
 
             -R | --registry)
                 registry="$2";
-                shift;
+                shift 2;
             ;;
 
             -U | --registry-username)
                 registry_username="$2";
-                shift;
+                shift 2;
             ;;
 
             -P | --registry-password)
                 registry_password="$2";
-                shift;
+                shift 2;
             ;;
 
             -S | --registry-password-stdin)
@@ -123,24 +125,34 @@ main() {
                 shift;
             ;;
 
+            --ghcr-library)
+                ghcr_library="$2";
+                shift 2;
+            ;;
+
+            --ghcr-repository)
+                ghcr_repository="$2";
+                shift 2;
+            ;;
+
             -l | --library)
                 library="$2";
-                shift;
+                shift 2;
             ;;
 
             -r | --repository)
                 repository="$2";
-                shift;
+                shift 2;
             ;;
 
             -b | -builder)
                 builder="$2";
-                shift;
+                shift 2;
             ;;
 
             -p | --platforms)
                 platforms="$2"
-                shift;
+                shift 2;
             ;;
 
             *)

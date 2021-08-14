@@ -60,8 +60,8 @@ login() {
 }
 
 build() {
-    tag1="latest"
-    tag2="${image_version}"
+    tag1="local-latest"
+    tag2="local-sha$(git log -1 --pretty=%h)"
     repository_root="."
 
     echo "Starting build...";

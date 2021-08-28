@@ -14,7 +14,7 @@ setopt histignorealldups sharehistory
 bindkey -e
 
 export HISTSIZE=100000
-export SAVEHIST=1000000
+export SAVEHIST=10000000
 export HISTFILE="${HOME}/.zsh_history"
 
 autoload -Uz compinit
@@ -47,6 +47,6 @@ if [ -f "${HOME}/.zsh_aliases" ]; then
 fi
 
 # Import oh-my-zsh
-if [ =f "/usr/share/zsh/zshrc.ohmyzsh.sh" ]; then
-    . "/usr/share/zsh/zshrc.ohmyzsh.sh";
+if [ -f /usr/localshare/zsh/zsh.zshrc.sh ]; then
+    . /usr/localshare/zsh/zsh.zshrc.sh;
 fi

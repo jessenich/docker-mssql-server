@@ -20,27 +20,47 @@ ENV MSSQL_PID=Developer \
 
 USER root
 
-ENV MSSQL_SYSTEM_DIR="/var/opt/mssql" \
-    MSSQL_BACKUP_DIR="/var/opt/mssql/backup/" \
-    MSSQL_DATA_DIR="/var/opt/mssql/data/" \
-    MSSQL_LOG_DIR="/var/opt/mssql/log/"
+ENV MSSQL_SYSTEM_DIR="/var/opt/mssql/system" \
+    MSSQL_BACKUP_DIR="/var/opt/mssql/backup" \
+    MSSQL_DATA_DIR="/var/opt/mssql/data" \
+    MSSQL_LOG_DIR="/var/opt/mssql/log"
 
 ADD https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb packages-microsoft-prod.deb
 COPY ./lxfs /
 RUN export DEBIAN_NONINTERACTIVE=true && \
-    chmod +x /usr/sbin/adduser.sh && \
-    chmod +x /usr/sbin/mkchowndir.sh && \
-    apt-get update && \
-    apt-get upgrade -y && \
+    chmod +x /usr/local/sbin/add-sudo-user.sh && \
+    chmod +x /usr/local/sbin/mkdir-chown.sh && \
+    chmod +x /usr/local/sbin/install-oh-my.sh && \
+    chown mssql /usr/local/sbin/add-sudo-user.sh && \
+    chown mssql /usr/local/sbin/mkdir-chown.sh && \
+    chown mssql /usr/local/sbin/install-oh-my.sh && \
+    apt-get update 2>/dev/null && \
     apt-get install -y \
-        wget \
-        curl \
+        agent-transfer \
         apt-transport-https \
+        ca-certificates \
+        curl \
+        git \
+        gnupg \
+        gnupg-agent \
+        gnupg-utils \
+        libcppdb-dev \
+        libcppdb0 \
+        libcppdb-odbc0 \
+        libcppdb-sqlite3-0 \
+        libcppdb-mysql0 \
+        libcppdb-postgresql0 \
+        man-db \
+        openssh-client \
+        openssh-known-hosts \
+        openssh-server \
+        openssh-sftp-server \
         software-properties-common \
         sqlite3 \
         sqlite3-doc \
         sqlite3-pcre \
         sudo \
+        wget \
         zsh \
         zsh-doc && \
     chsh -s /bin/zsh root && \
@@ -51,10 +71,11 @@ RUN export DEBIAN_NONINTERACTIVE=true && \
     apt-get install -y \
         powershell && \
     rm -f packages-microsoft-prod.deb 2>/dev/null && \
-    /bin/bash /usr/sbin/mkchowndir.sh mssql "${MSSQL_BACKUP_DIR}" && \
-    /bin/bash /usr/sbin/mkchowndir.sh mssql "${MSSQL_DATA_DIR}" && \
-    /bin/bash /usr/sbin/mkchowndir.sh mssql "${MSSQL_LOG_DIR}" && \
-    rm -rf /tmp/buildx;
+    /usr/local/sbin/install-oh-my.sh && \
+    /usr/local/sbin/mkdir-chown.sh mssql "${MSSQL_SYSTEM_DIR}" && \
+    /usr/local/sbin/mkdir-chown.sh mssql "${MSSQL_BACKUP_DIR}" && \
+    /usr/local/sbin/mkdir-chown.sh mssql "${MSSQL_DATA_DIR}" && \
+    /usr/local/sbin/mkdir-chown.sh mssql "${MSSQL_LOG_DIR}";
 
 VOLUME "${MSSQL_SYSTEM_DIR}" \
        "${MSSQL_BACKUP_DIR}" \
@@ -63,8 +84,8 @@ VOLUME "${MSSQL_SYSTEM_DIR}" \
 
 # Sets the variable to inform Docker that the container
 # listens on the specified network port.
-EXPOSE 1433/tcp \
-       1434/udp
+EXPOSE 1433
+EXPOSE 1434
 
 USER mssql
 WORKDIR /home/mssql

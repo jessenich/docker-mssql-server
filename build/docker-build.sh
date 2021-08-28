@@ -13,6 +13,7 @@ ghcr_repository="mssql-server";
 library="jessenich91";
 repository="mssql-server";
 builder="default";
+push=false
 
 variant="2019-latest";
 
@@ -60,8 +61,14 @@ login() {
 }
 
 build() {
-    tag1="local-latest"
-    tag2="local-sha$(git log -1 --pretty=%h)"
+    if [ -n "${image_version}" ]; then
+        tag1="dev-latest"
+        tag2="dev-sha-$(git log -1 --pretty=%h)"
+    else
+        tag1="latest"
+        tag2="${image_version}"
+        push=true
+    fi
     repository_root="."
 
     echo "Starting build...";
@@ -73,8 +80,13 @@ build() {
         -t "ghcr.io/${ghcr_library}/${ghcr_repository}:${tag1}" \
         -t "ghcr.io/${ghcr_library}/${ghcr_repository}:${tag2}" \
         --build-arg "VARIANT=${variant}" \
-        --push \
         "${repository_root}"
+
+    if [ "${push}" = true ]; then
+        docker tag "${library}/${repository}:${tag1}" ghcr.io/"${library}/${repository}:${tag1}"
+        docker tag "${library}/${repository}:${tag2}" ghcr.io/"${library}/${repository}:${tag2}"
+        docker push
+    fi
 }
 
 run() {

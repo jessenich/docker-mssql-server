@@ -24,16 +24,6 @@ env:
 jobs:
   build-docker-image:
     runs-on: "ubuntu-latest"
-    env:
-      LABELS: |
-        "maintainer: Jesse N. <jesse@keplerdev.com>"
-        "com.keplerdev.metadata.maintainer: Jesse N. <jesse@keplerdev.com>"
-        "com.keplerdev.metadata.source.sha: ${{ github.sha }}"
-        "com.keplerdev.metadata.source.ref: ${{ github.ref }}"
-        "com.keplerdev.metadata.build.run-id: ${{ github.run_id }}"
-        "com.keplerdev.metadata.build.run-number: ${{ github.run_number }}"
-        "com.keplerdev.metadata.builder.workflow.name: ${{ github.workflow }}"
-
     steps:
       - name: Checkout
         uses: actions/checkout@v2

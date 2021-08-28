@@ -5,6 +5,8 @@ version: "3.8"
 
 services:
   sqlserver01:
+    container_name: mssql-server-2019
+    host_name: mssql-server-2019
     image: jessenich91/mssql-server:latest
     restart: unless-stopped
     stop_grace_period: 1m30s
@@ -27,8 +29,8 @@ services:
         max-size: 200k
         max-file: 3
     ports:
-      - "1433:1433/tcp"
-      - "1434:1434/udp"
+      - "1433:1433"
+      - "1434:1434"
     volumes:
       - "sqldbsystem:/var/opt/mssql"
       - "sqldbdata:/var/opt/mssql/data"
@@ -36,8 +38,12 @@ services:
       - "sqldbbackup:/var/opt/mssql/backup"
 
   sqlpad:
+    container_name: sqlpad
     image: sqlpad/sqlpad:latest
-    hostname: 'sqlpad'
+    hostname: sqlpad
+    restart: unless-stopped
+    stop_grace_period: 1m30s
+    network_mode: bridge
     ports:
       - '3010:3000'
     env_file:

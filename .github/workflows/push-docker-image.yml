@@ -19,10 +19,19 @@ env:
   DOCKERHUB_LIBRARY: jessenich91
   DOCKERHUB_REPO: mssql-server
   GHCR_URI: ghcr.io
-
+  LABELS: |
+    maintainer=Jesse N. <jesse@keplerdev.com>
 
 jobs:
   build-docker-image:
+    permissions:
+      contents: read
+      packages: write
+
+    strategy:
+      matrix:
+        sql-variant: [ "2017-latest", "2019-latest" ]
+
     runs-on: "ubuntu-latest"
     steps:
       - name: Checkout

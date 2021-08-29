@@ -78,15 +78,15 @@ if [ -f ~/.bash_aliases ]; then
 fi
 
 if ! shopt -oq posix; then
-  if [ -f /usr/share/bash-completion/bash_completion ]; then
-    . /usr/share/bash-completion/bash_completion
+  if [ -f /usr/local/share/bash-completion/bash_completion ]; then
+    . /usr/local/share/bash-completion/bash_completion
   elif [ -f /etc/bash_completion ]; then
     . /etc/bash_completion;
   fi
 fi
 
-if [ -f /usr/locl/share/.bashrc ]; then
-    . /usr/locl/share/.bashrc;
+if [ -f /usr/local/share/bash/.bashrc ]; then
+    . /usr/local/share/.bashrc;
 fi
 
 if [ -f /usr/local/share/bash/bash.bashrc.sh ]; then

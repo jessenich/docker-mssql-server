@@ -25,16 +25,14 @@ ENV MSSQL_SYSTEM_DIR="/var/opt/mssql/system" \
     MSSQL_DATA_DIR="/var/opt/mssql/data" \
     MSSQL_LOG_DIR="/var/opt/mssql/log"
 
-ADD https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb packages-microsoft-prod.deb
+
 COPY ./lxfs /
-RUN export DEBIAN_NONINTERACTIVE=true && \
-    chmod +x /usr/local/sbin/add-sudo-user.sh && \
-    chmod +x /usr/local/sbin/mkdir-chown.sh && \
-    chmod +x /usr/local/sbin/install-oh-my.sh && \
+RUN export DEBIAN_NONINTERACTIVE=1 && \
     chown mssql /usr/local/sbin/add-sudo-user.sh && \
     chown mssql /usr/local/sbin/mkdir-chown.sh && \
-    chown mssql /usr/local/sbin/install-oh-my.sh && \
-    apt-get update 2>/dev/null && \
+    chown mssql /usr/local/sbin/install-oh-my.sh;
+
+RUN apt-get update 2>/dev/null && \
     apt-get install -y \
         agent-transfer \
         apt-transport-https \
@@ -62,28 +60,38 @@ RUN export DEBIAN_NONINTERACTIVE=true && \
         sudo \
         wget \
         zsh \
-        zsh-doc && \
-    chsh -s /bin/zsh root && \
-    chsh -s /bin/zsh mssql && \
-    dpkg -i packages-microsoft-prod.deb && \
+        zsh-doc;
+
+# Install oh-my-bash and oh-my-zsh
+RUN /bin/bash /usr/local/sbin/install-oh-my.sh;
+
+RUN chsh -s /bin/zsh root && \
+    chsh -s /bin/zsh mssql;
+
+# Install PowerShell 7
+ADD https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb packages-microsoft-prod.deb
+RUN dpkg -i packages-microsoft-prod.deb && \
     apt-get update && \
     add-apt-repository universe && \
     apt-get install -y \
         powershell && \
-    rm -f packages-microsoft-prod.deb 2>/dev/null && \
-    /usr/local/sbin/install-oh-my.sh && \
-    /usr/local/sbin/mkdir-chown.sh mssql "${MSSQL_SYSTEM_DIR}" && \
-    /usr/local/sbin/mkdir-chown.sh mssql "${MSSQL_BACKUP_DIR}" && \
-    /usr/local/sbin/mkdir-chown.sh mssql "${MSSQL_DATA_DIR}" && \
-    /usr/local/sbin/mkdir-chown.sh mssql "${MSSQL_LOG_DIR}";
+    rm -f packages-microsoft-prod.deb 2>/dev/null;
+
+# Install oh-my-posh
+RUN pwsh -NoProfile -NonInteractive -NoLogo -File /usr/local/sbin/install-oh-my-posh.ps1
+
+# Create volume directories
+RUN export DEBIAN_NONINTERACTIVE=1 && \
+    /bin/bash /usr/local/sbin/mkdir-chown.sh mssql "${MSSQL_SYSTEM_DIR}" && \
+    /bin/bash /usr/local/sbin/mkdir-chown.sh mssql "${MSSQL_BACKUP_DIR}" && \
+    /bin/bash /usr/local/sbin/mkdir-chown.sh mssql "${MSSQL_DATA_DIR}" && \
+    /bin/bash /usr/local/sbin/mkdir-chown.sh mssql "${MSSQL_LOG_DIR}";
 
 VOLUME "${MSSQL_SYSTEM_DIR}" \
        "${MSSQL_BACKUP_DIR}" \
        "${MSSQL_DATA_DIR}" \
        "${MSSQL_LOG_DIR}"
 
-# Sets the variable to inform Docker that the container
-# listens on the specified network port.
 EXPOSE 1433
 EXPOSE 1434
 

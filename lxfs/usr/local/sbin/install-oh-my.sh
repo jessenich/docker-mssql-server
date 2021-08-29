@@ -1,15 +1,23 @@
-OSH="/usr/local/share/bash/oh-my-bash";
-ZSH="/usr/local/share/zsh/oh-my-zsh";
+#!/usr/bin/env bash
+
+export OSH="/usr/local/share/bash/oh-my-bash";
+export ZSH="/usr/local/share/zsh/oh-my-zsh";
 
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)"
 /bin/bash -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
-mv -f /root/.oh-my-bash "${OSH}" 2>/dev/null;
-mv -f /root/.oh-my-zsh "${ZSH}" 2>/dev/null;
+if [ -d /root/.oh-my-bash ]; then
+    mv /root/.oh-my-bash "${OSH}";
+fi
 
-pwsh -command 'Get-PSRepository | Set-PSRepository -InstallationPolicy Trusted; Install-Module oh-my-posh -Scope AllUsers -AcceptLicense -Force'
+if [ -d /root/.oh-my-zsh ]; then
+    mv /root/.oh-my-zsh "${ZSH}";
+fi
 
-mkdir -p /opt/microsoft/powershell/7/
-touch /opt/microsoft/powershell/7/profile.ps1
-echo "Import-Module -Name oh-my-posh -Global;" >> /opt/microsoft/powershell/7/profile.ps1
-echo "Set-PoshPrompt -Theme powerlevel10k_rainbow" >> /opt/microsoft/powershell/7/profile.ps1
+if [ -f /root/.bashrc.pre-oh-my-bash ]; then
+    mv /root/.bashrc.pre-oh-my-bash /root/.bashrc
+fi
+
+if [ -f /root/.zshrc.pre-oh-my-zsh ]; then
+    mv /root/.zshrc.pre-oh-my-zsh /root/.zshrc
+fi

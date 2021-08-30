@@ -3,7 +3,7 @@
 [CmdletBinding()]
 param (
     [Parameter()]
-    [hashset]
+    [string[]]
     $Modules = @("posh-git", "oh-my-posh", "Az", "Az.CosmosDB"),
 
     # Specifies a path to one or more locations. Unlike the Path parameter, the value of the LiteralPath parameter is
@@ -54,7 +54,7 @@ foreach ($mod in $Modules) {
 
 $paths = @()
 $LiteralPathType = Get-Member -InputObject $Modules
-if ($LiteralPathType.ToString() -eq "System.Object[]" || $LiteralPath.Count -le 0) {
+if ($LiteralPathType.ToString() -eq "System.Object[]" || $LiteralPathType.ToString() -eq "System.String[]" || $LiteralPath.Count -le 0) {
     $paths = $LiteralPathType
 }
 elseif ($LiteralPathType -eq "System.String") {

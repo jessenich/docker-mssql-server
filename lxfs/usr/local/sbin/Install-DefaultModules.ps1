@@ -4,7 +4,7 @@
 param (
     [Parameter()]
     [hashset]
-    $Modules = @("posh-git", "oh-my-posh", "Az"),
+    $Modules = @("posh-git", "oh-my-posh", "Az", "Az.CosmosDB"),
 
     # Specifies a path to one or more locations. Unlike the Path parameter, the value of the LiteralPath parameter is
     # used exactly as it is typed. No characters are interpreted as wildcards. If the path includes escape characters,
@@ -15,7 +15,14 @@ param (
     [Alias("PSPath")]
     [ValidateNotNullOrEmpty()]
     [string[]]
-    $LiteralPath = @($profile.AllUsersAllHosts),
+    $LiteralPath = @(
+        $profile.CurrentUserCurrentHost,
+        $profile.CurrentUserCurrentHost,
+        $profile.AllUsersCurrentHost,
+        $profile.AllUsersAllHosts,
+        "/home/mssql/.config/powershell/Microsoft.PowerShell_profile.ps1",
+        "/home/mssql/.config/powershell/profile.ps1"
+    ),
 
     # Working directory to execute script within
     [Parameter()]
@@ -29,18 +36,8 @@ param (
 )
 
 if ($null -eq $Content) {
-    $content = @"
-`$module = Get-Module -Name oh-my-posh -ListAvailable
-if (`$null -ne `$module) {
-    Import-Module -Name posh-git -Global
-    Import-Module -Name oh-my-posh -Global
-    Set-PoshPrompt -Theme powerlevel10k_rainbow
+    $Content = Get-Content -Path "/etc/pwsh/profile.template.ps1"
 }
-
-Write-Output "Az Modules available: 'ipmo Az'"
-"@
-}
-
 
 Get-PSRepository -Name PSGallery |
     Where-Object -Property InstallationPolicy -NE -Value Trusted |
@@ -56,27 +53,18 @@ foreach ($mod in $Modules) {
 }
 
 $paths = @()
-if ($LiteralPath.GetType() -eq [string].GetType() || $LiteralPath.Count -le 1) {
-    $paths += $LiteralPath
+$LiteralPathType = Get-Member -InputObject $Modules
+if ($LiteralPathType.ToString() -eq "System.Object[]" || $LiteralPath.Count -le 0) {
+    $paths = $LiteralPathType
 }
-elseif ($LiteralPath.Count -gt 1) {
-    $paths = $LiteralPath;
-}
-else {
-    $paths = @(
-        $profile.CurrentUserCurrentHost,
-        $profile.CurrentUserCurrentHost,
-        $profile.AllUsersCurrentHost,
-        $profile.AllUsersAllHosts,
-        "/home/mssql/.config/powershell/Microsoft.PowerShell_profile.ps1",
-        "/home/mssql/.config/powershell/profile.ps1"
-    )
+elseif ($LiteralPathType -eq "System.String") {
+    $paths += $LiteralPathType;
 }
 
-foreach ($pth in $paths) {
-    if (!(Test-Path $pth)) {
-        New-Item -Path $pth -ItemType File -Force
+foreach ($path in $paths) {
+    if (!(Test-Path $path)) {
+        New-Item -Path $path -ItemType File -Force
     }
 
-    Set-Content -Path $pth -Value $Content -Force
+    Set-Content -Path $path -Value $Content -Force
 }

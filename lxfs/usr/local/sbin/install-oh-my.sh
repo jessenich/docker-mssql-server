@@ -21,3 +21,8 @@ fi
 if [ -f /root/.zshrc.pre-oh-my-zsh ]; then
     mv /root/.zshrc.pre-oh-my-zsh /root/.zshrc
 fi
+
+shells_update="$(cat /etc/shells | grep zsh)";
+if [ -n "$shells_update" ]; then
+    echo "/bin/zsh" >> /etc/shells;
+fi

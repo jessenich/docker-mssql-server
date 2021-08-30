@@ -3,7 +3,7 @@
 [CmdletBinding()]
 param (
     [Parameter()]
-    [string[]]
+    [hashset]
     $Modules = @("posh-git", "oh-my-posh", "Az"),
 
     # Specifies a path to one or more locations. Unlike the Path parameter, the value of the LiteralPath parameter is
@@ -44,37 +44,39 @@ Write-Output "Az Modules available: 'ipmo Az'"
 
 Get-PSRepository -Name PSGallery |
     Where-Object -Property InstallationPolicy -NE -Value Trusted |
-    Set-PSRepository -InstallationPolicy Trusted
+    Set-PSRepository -InstallationPolicy Trusted -ErrorAction SilentlyContinue
 
-foreach ($mod in $modules) {
-    $HashArgs = @{
-        Name = $mod
-        Scope = AllUsers
-        AcceptLicense = $true
-    };
-
-    if ($mod -eq "Az") {
-        $HashArgs.AllowClobber = $true;
+foreach ($mod in $Modules) {
+    if ($mod -imatch "[az]") {
+        Install-Module -Name $mod -Scope AllUsers -Repository PSGallery -AcceptLicense -Force
     }
-
-    Install-Module @HashArgs
+    else {
+        Install-Module -Name $mod -Scope AllUsers -Repository PSGallery -AcceptLicense -Force
+    }
 }
+
 $paths = @()
-if ($LiteralPath.GetType() -eq [string].GetType()) {
+if ($LiteralPath.GetType() -eq [string].GetType() || $LiteralPath.Count -le 1) {
     $paths += $LiteralPath
 }
+elseif ($LiteralPath.Count -gt 1) {
+    $paths = $LiteralPath;
+}
+else {
+    $paths = @(
+        $profile.CurrentUserCurrentHost,
+        $profile.CurrentUserCurrentHost,
+        $profile.AllUsersCurrentHost,
+        $profile.AllUsersAllHosts,
+        "/home/mssql/.config/powershell/Microsoft.PowerShell_profile.ps1",
+        "/home/mssql/.config/powershell/profile.ps1"
+    )
+}
 
-New-Item -Name $profile.CurrentUserCurrentUser -ItemType File -Force
-New-Item -Name $profile.CurrentUserAllHosts -ItemType File -Force
-New-Item -Name $profile.AllUsersCurrentHost -ItemType File -Force
-New-Item -Name $profile.AllUsersAllHosts -ItemType File -Force
-New-Item -Name "/home/mssql/.config/powershell/Microsoft.PowerShell_profile.ps1" -ItemType File -Force
-New-Item -Name "/home/mssql/.config/powershell/profile.ps1" -ItemType File -Force
-
-foreach ($p in $paths) {
-    if (!(Test-Path $p)) {
-        New-Item -Path $p -ItemType File -Force
+foreach ($pth in $paths) {
+    if (!(Test-Path $pth)) {
+        New-Item -Path $pth -ItemType File -Force
     }
 
-    Set-Content -Path $p -Value $Content -Force
+    Set-Content -Path $pth -Value $Content -Force
 }

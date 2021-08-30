@@ -1,5 +1,5 @@
 # shellcheck shell=bash
-# shellcheck disable=SC1091
+# shellcheck disable=SC1091,SC2034
 
 if [ -d "$HOME/bin" ]; then
   export PATH=$HOME/bin:/usr/local/bin:$PATH;
@@ -49,3 +49,11 @@ edit-zsh-config() { "$EDITOR ~/.zshrc"; }
 edit-oh-my-zsh() { "$EDITOR $ZSH/oh-my-zsh"; }
 src-oh-my-zsh() { "source $ZSH/oh-my-zsh"; }
 src-zshrc() { "source ~/.zshrc"; }
+
+# zsh parameter completion for the dotnet CLI
+_dotnet_zsh_complete()
+{
+  local completions=("$(dotnet complete "$words")");
+  reply=( "${(ps:\n:)completions}" );
+}
+compctl -K _dotnet_zsh_complete dotnet;

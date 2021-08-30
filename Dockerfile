@@ -1,5 +1,5 @@
 ARG VARIANT="2019-latest"
-FROM mcr.microsoft.com/mssql/server:"${VARIANT}" as build
+FROM mcr.microsoft.com/mssql/server:"${VARIANT}"
 
 LABEL maintainer="Jesse N. <jesse@keplerdev.com>"
 LABEL org.opencontainers.image.source="https://github.com/jessenich/docker-mssql-server"
@@ -18,17 +18,19 @@ ENV MSSQL_PID=Developer \
     ACCEPT_EULA=Y \
     SA_PASSWORD=$DB_MSSQL_PASSWORD
 
+# Set default file locations
+ENV MSSQL_BACKUP_DIR="/var/opt/mssql/backup" \
+    MSSQL_DATA_DIR="/var/opt/mssql/data" \
+    MSSQL_LOG_DIR="/var/opt/mssql/log" \
+    DEBIAN_NONINTERACTIVE=1
+
 USER root
 
-ENV MSSQL_SYSTEM_DIR="/var/opt/mssql/system" \
-    MSSQL_BACKUP_DIR="/var/opt/mssql/backup" \
-    MSSQL_DATA_DIR="/var/opt/mssql/data" \
-    MSSQL_LOG_DIR="/var/opt/mssql/log"
-
-
 COPY ./lxfs /
-RUN export DEBIAN_NONINTERACTIVE=1 && \
-    chown mssql /usr/local/sbin/add-sudo-user.sh && \
+
+RUN /bin/bash /usr/local/sbin/install-oh-my.sh;
+
+RUN chown mssql /usr/local/sbin/add-sudo-user.sh && \
     chown mssql /usr/local/sbin/mkdir-chown.sh && \
     chown mssql /usr/local/sbin/install-oh-my.sh;
 
@@ -62,12 +64,6 @@ RUN apt-get update 2>/dev/null && \
         zsh \
         zsh-doc;
 
-# Install oh-my-bash and oh-my-zsh
-RUN /bin/bash /usr/local/sbin/install-oh-my.sh;
-
-RUN chsh -s /bin/zsh root && \
-    chsh -s /bin/zsh mssql;
-
 # Install PowerShell 7
 ADD https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb packages-microsoft-prod.deb
 RUN dpkg -i packages-microsoft-prod.deb && \
@@ -78,17 +74,16 @@ RUN dpkg -i packages-microsoft-prod.deb && \
     rm -f packages-microsoft-prod.deb 2>/dev/null;
 
 # Install oh-my-posh
-RUN pwsh -NoProfile -NonInteractive -NoLogo -File /usr/local/sbin/install-oh-my-posh.ps1
+RUN pwsh -NoProfile -NonInteractive -NoLogo -File /usr/local/sbin/Install-DefaultModules.ps1
 
 # Create volume directories
-RUN export DEBIAN_NONINTERACTIVE=1 && \
-    /bin/bash /usr/local/sbin/mkdir-chown.sh mssql "${MSSQL_SYSTEM_DIR}" && \
+RUN /bin/bash /usr/local/sbin/add-sudo-user.sh --user mssql --no-create-user --shell /bin/zsh 2>&1 && \
+    /bin/bash /usr/local/sbin/add-sudo-user.sh --user root --no-create-user --shell /bin/zsh 2>&1 && \
     /bin/bash /usr/local/sbin/mkdir-chown.sh mssql "${MSSQL_BACKUP_DIR}" && \
     /bin/bash /usr/local/sbin/mkdir-chown.sh mssql "${MSSQL_DATA_DIR}" && \
     /bin/bash /usr/local/sbin/mkdir-chown.sh mssql "${MSSQL_LOG_DIR}";
 
-VOLUME "${MSSQL_SYSTEM_DIR}" \
-       "${MSSQL_BACKUP_DIR}" \
+VOLUME "${MSSQL_BACKUP_DIR}" \
        "${MSSQL_DATA_DIR}" \
        "${MSSQL_LOG_DIR}"
 
@@ -97,4 +92,4 @@ EXPOSE 1434
 
 USER mssql
 WORKDIR /home/mssql
-CMD [ "/opt/mssql/bin/sqlservr" ]
+CMD [ "sudo" "/opt/mssql/bin/sqlservr" ]

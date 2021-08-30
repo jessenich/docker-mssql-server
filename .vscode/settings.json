@@ -12,5 +12,6 @@
         "nodocs",
         "opencontainers",
         "sqlserver"
-    ]
+    ],
+    "deno.enable": true
 }

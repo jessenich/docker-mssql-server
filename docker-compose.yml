@@ -6,7 +6,6 @@ version: "3.8"
 services:
   sqlserver01:
     container_name: mssql-server-2019
-    host_name: mssql-server-2019
     image: jessenich91/mssql-server:latest
     restart: unless-stopped
     stop_grace_period: 1m30s
@@ -14,15 +13,6 @@ services:
     env_file:
       - sqlserver.env
       - sqlserver.secrets.env
-    build:
-      dockerfile: Dockerfile
-      context: .
-      args:
-        VARIANT: 2019-latest
-      labels:
-        maintainer: Jesse N. <jesse@keplerdev.com>
-        com.keplerdev.maintainer: Jesse N. <jesse@keplerdev.com>
-        com.keplerdev.image.base: "mcr.microsoft.com/mssql/server:2019-latest"
     logging:
       driver: json-file
       options:
@@ -40,7 +30,6 @@ services:
   sqlpad:
     container_name: sqlpad
     image: sqlpad/sqlpad:latest
-    hostname: sqlpad
     restart: unless-stopped
     stop_grace_period: 1m30s
     network_mode: bridge

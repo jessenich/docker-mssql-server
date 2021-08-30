@@ -67,7 +67,6 @@ build() {
     else
         tag1="latest"
         tag2="${image_version}"
-        push=true
     fi
     repository_root="."
 
@@ -80,13 +79,9 @@ build() {
         -t "ghcr.io/${ghcr_library}/${ghcr_repository}:${tag1}" \
         -t "ghcr.io/${ghcr_library}/${ghcr_repository}:${tag2}" \
         --build-arg "VARIANT=${variant}" \
+        --push \
         "${repository_root}"
 
-    if [ "${push}" = true ]; then
-        docker tag "${library}/${repository}:${tag1}" ghcr.io/"${library}/${repository}:${tag1}"
-        docker tag "${library}/${repository}:${tag2}" ghcr.io/"${library}/${repository}:${tag2}"
-        docker push
-    fi
 }
 
 run() {

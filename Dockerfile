@@ -34,7 +34,7 @@ RUN chown mssql /usr/local/sbin/add-sudo-user.sh && \
     chown mssql /usr/local/sbin/mkdir-chown.sh && \
     chown mssql /usr/local/sbin/install-oh-my.sh;
 
-RUN apt-get update 2>/dev/null && \
+RUN apt-get update && \
     apt-get install -y \
         agent-transfer \
         apt-transport-https \

@@ -23,7 +23,7 @@ jobs:
 
     strategy:
       matrix:
-        sql-variant: [ "2017", "2019" ]
+        sql-variant: [ "2019" ]
 
     runs-on: "ubuntu-latest"
     steps:

@@ -66,5 +66,5 @@ foreach ($path in $paths) {
         New-Item -Path $path -ItemType File -Force
     }
 
-    Set-Content -Path $path -Value $Content -Force
+    $Content | Out-File -FilePath $path -Force
 }

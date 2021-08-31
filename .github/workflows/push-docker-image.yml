@@ -23,7 +23,7 @@ jobs:
 
     strategy:
       matrix:
-        sql-variant: [ "2017-latest", "2019-latest" ]
+        sql-variant: [ "2017", "2019" ]
 
     runs-on: "ubuntu-latest"
     steps:
@@ -60,9 +60,8 @@ jobs:
             "${{ env.GHCR_URI }}/${{ github.actor }}/${{ env.DOCKERHUB_REPO }}"
           tags: |
             type=raw,enable=${{ contains(matrix.sql-variant, '2019') }},priority=100,value=latest
-            type=semver,enable=true,pattern={{major}}.{{minor}}.{{patch}}-${{ matrix.sql-variant }}
-            type=semver,enable=true,pattern={{major}}.{{minor}}-${{ matrix.sql-variant }}
-            type=semver,enable=true,pattern={{major}}-${{ matrix.sql-variant }}
+            type=semver,enable=true,pattern={{major}}.{{minor}}.{{patch}}-${{ matrix.sql-variant }}latest
+            type=semver,enable=true,pattern={{major}}.{{minor}}-${{ matrix.sql-variant }}latest
           labels: ${{ env.LABELS }}
 
       - name: Build & Push Latest
@@ -70,10 +69,7 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
-          labels: |
-            "${{ steps.meta.outputs.labels }}"
-          build-args: "VARIANT=${{ matrix.sql-variant }}"
-          pull: true
+          labels: "${{ steps.meta.outputs.labels }}"
+          build-args: "VARIANT=${{ matrix.sql-variant }}-latest"
           push: true
-          tags: |
-            "${{ steps.meta.outputs.tags }}"
+          tags: "${{ steps.meta.outputs.tags }}"

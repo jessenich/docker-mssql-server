@@ -22,7 +22,7 @@ ENV MSSQL_PID=Developer \
 ENV MSSQL_BACKUP_DIR="/var/opt/mssql/backup" \
     MSSQL_DATA_DIR="/var/opt/mssql/data" \
     MSSQL_LOG_DIR="/var/opt/mssql/log" \
-    DEBIAN_NONINTERACTIVE=1
+    DEBIAN_FRONTEND=noninteractive
 
 USER root
 

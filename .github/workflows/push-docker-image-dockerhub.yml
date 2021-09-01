@@ -44,12 +44,20 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Login to ghcr.io Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.GHCR_URI }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Get Docker Metadata
         id: meta
         uses: docker/metadata-action@v3
         with:
           images: |
             "${{ env.DOCKERHUB_LIBRARY }}/${{ env.DOCKERHUB_REPO }}"
+            "${{ env.GHCR_URI }}/${{ github.actor }}/${{ env.DOCKERHUB_REPO }}"
           tags: |
             type=raw,enable=${{ contains(matrix.sql-variant, '2019') }},priority=100,value=latest
             type=semver,enable=true,pattern={{major}}.{{minor}}.{{patch}}_${{ matrix.sql-variant }}.latest
@@ -63,5 +71,6 @@ jobs:
           file: ./Dockerfile
           labels: "${{ steps.meta.outputs.labels }}"
           build-args: "VARIANT=${{ matrix.sql-variant }}-latest"
+          pull: true
           push: true
           tags: "${{ steps.meta.outputs.tags }}"

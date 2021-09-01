@@ -55,7 +55,7 @@ foreach ($mod in $Modules) {
 $paths = @()
 $LiteralPathType = Get-Member -InputObject $Modules
 if ($LiteralPathType.ToString() -eq "System.Object[]" || $LiteralPathType.ToString() -eq "System.String[]" || $LiteralPath.Count -le 0) {
-    $paths = $LiteralPathType
+    $paths = $LiteralPath
 }
 elseif ($LiteralPathType -eq "System.String") {
     $paths += $LiteralPathType;

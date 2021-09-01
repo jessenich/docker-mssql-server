@@ -4,7 +4,7 @@
 
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/jessenich/docker-mssql-server/Publish%20Docker%20Image?label=Build%20%26%20Push%20Docker%20Image&style=for-the-badge)
 
-[![Docker Image Version (latest semver)](https://img.shields.io/docker/v/jessenich91/alpine?style=for-the-badge)](https://dockerhub.com/r/jessenich91/mssql-server) [![Docker Image Size (tag)](https://img.shields.io/docker/image-size/jessenich91/mssql-server/latest?style=for-the-badge)](https://dockerhub.com/r/jessenich91/mssql-server) [![Docker Pulls](https://img.shields.io/docker/pulls/jessenich91/mssql-server?label=DOCKERHUB%20PULLS&style=for-the-badge)](https://dockerhub.com/r/jessenich91/mssql-server)
+[![Docker Image Version (latest semver)](https://img.shields.io/docker/v/jessenich91/mssql-server?style=for-the-badge)](https://dockerhub.com/r/jessenich91/mssql-server) [![Docker Image Size (tag)](https://img.shields.io/docker/image-size/jessenich91/mssql-server/latest?style=for-the-badge)](https://dockerhub.com/r/jessenich91/mssql-server) [![Docker Pulls](https://img.shields.io/docker/pulls/jessenich91/mssql-server?label=DOCKERHUB%20PULLS&style=for-the-badge)](https://dockerhub.com/r/jessenich91/mssql-server)
 
 [![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-ready--to--code-908a85?logo=gitpod)](https://gitpod.io/#https://github.com/jessenich/docker-mssql-server)
 

@@ -31,6 +31,7 @@ COPY ./lxfs /
 RUN apt-get update && \
     apt-get install -y \
         agent-transfer \
+
         apt-transport-https \
         ca-certificates \
         curl \

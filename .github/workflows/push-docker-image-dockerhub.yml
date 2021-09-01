@@ -52,9 +52,9 @@ jobs:
             "${{ env.DOCKERHUB_LIBRARY }}/${{ env.DOCKERHUB_REPO }}"
           tags: |
             type=raw,enable=${{ contains(matrix.sql-variant, '2019') }},priority=100,value=latest
-            type=semver,enable=true,pattern={{major}}.{{minor}}.{{patch}}-${{ matrix.sql-variant }}latest
-            type=semver,enable=true,pattern={{major}}.{{minor}}-${{ matrix.sql-variant }}latest
+            type=semver,enable=true,pattern={{major}}.{{minor}}.{{patch}}_${{ matrix.sql-variant }}.latest
           labels: ${{ env.LABELS }}
+          flavor: latest=false
 
       - name: Build & Push Latest
         uses: docker/build-push-action@v2

@@ -61,13 +61,8 @@ login() {
 }
 
 build() {
-    if [ -n "${image_version}" ]; then
-        tag1="dev-latest"
-        tag2="dev-sha-$(git log -1 --pretty=%h)"
-    else
-        tag1="latest"
-        tag2="${image_version}"
-    fi
+    tag1="2019-latest"
+    tag2="2019-${image_version}"
     repository_root="."
 
     echo "Starting build...";

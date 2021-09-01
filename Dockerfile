@@ -28,12 +28,6 @@ USER root
 
 COPY ./lxfs /
 
-RUN /bin/bash /usr/local/sbin/install-oh-my.sh;
-
-RUN chown mssql /usr/local/sbin/add-sudo-user.sh && \
-    chown mssql /usr/local/sbin/mkdir-chown.sh && \
-    chown mssql /usr/local/sbin/install-oh-my.sh;
-
 RUN apt-get update && \
     apt-get install -y \
         agent-transfer \
@@ -63,6 +57,12 @@ RUN apt-get update && \
         wget \
         zsh \
         zsh-doc;
+
+RUN /bin/bash /usr/local/sbin/install-oh-my.sh;
+
+RUN chown mssql /usr/local/sbin/add-sudo-user.sh && \
+    chown mssql /usr/local/sbin/mkdir-chown.sh && \
+    chown mssql /usr/local/sbin/install-oh-my.sh;
 
 # Install PowerShell 7
 ADD https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb packages-microsoft-prod.deb

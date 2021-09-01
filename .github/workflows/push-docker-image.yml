@@ -1,7 +1,7 @@
 # Copyright (c) 2021 Jesse N. <jesse@keplerdev.com>
 # This work is licensed under the terms of the MIT license. For a copy, see <https://opensource.org/licenses/MIT>.
 
-name: "Publish Dockerhub Image"
+name: "Publish Docker Images"
 
 on:
   push:
@@ -11,6 +11,8 @@ on:
 env:
   DOCKERHUB_LIBRARY: jessenich91
   DOCKERHUB_REPO: mssql-server
+  GHCR_LIBRARY: jessenich
+  GHCR_REPO: mssql-server
   GHCR_URI: ghcr.io
   LABELS: |
     maintainer=Jesse N. <jesse@keplerdev.com>
@@ -23,7 +25,7 @@ jobs:
 
     strategy:
       matrix:
-        sql-variant: [ "2019" ]
+        sql-variant: [ "2019" ] # TODO Add 2017 variant. Requires dockerfile changes where a 'mssql' user does not exist.
 
     runs-on: "ubuntu-latest"
     steps:
@@ -57,10 +59,10 @@ jobs:
         with:
           images: |
             "${{ env.DOCKERHUB_LIBRARY }}/${{ env.DOCKERHUB_REPO }}"
-            "${{ env.GHCR_URI }}/${{ github.actor }}/${{ env.DOCKERHUB_REPO }}"
+            "${{ env.GHCR_URI }}/${{ env.GHCR_LIBRARY }}/${{ env.GHCR_REPO }}"
           tags: |
             type=raw,enable=${{ contains(matrix.sql-variant, '2019') }},priority=100,value=latest
-            type=semver,enable=true,pattern={{major}}.{{minor}}.{{patch}}_${{ matrix.sql-variant }}.latest
+            type=semver,enable=true,pattern={{major}}.{{minor}}.{{patch}}-${{ matrix.sql-variant }}.latest
           labels: ${{ env.LABELS }}
           flavor: latest=false
 

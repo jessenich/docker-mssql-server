@@ -6,7 +6,7 @@ version: "3.8"
 services:
   sqlserver01:
     container_name: mssql-server-2019
-    image: jessenich91/mssql-server:latest
+    image: ghcr.io/jessenich/mssql-server:latest
     restart: unless-stopped
     stop_grace_period: 1m30s
     network_mode: bridge

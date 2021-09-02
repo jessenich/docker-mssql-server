@@ -93,4 +93,4 @@ EXPOSE 1434
 
 USER mssql
 WORKDIR /home/mssql
-CMD [ "sudo" "/opt/mssql/bin/sqlservr" ]
+CMD [ "/opt/mssql/bin/sqlservr" ]

@@ -19,8 +19,8 @@ services:
         max-size: 200k
         max-file: 3
     ports:
-      - "1433:1433"
-      - "1434:1434"
+      - "1443:1433"
+      - "1444:1434"
     volumes:
       - sqldata:/var/opt/mssql
       #- "sqldbsystem:/var/opt/mssql"
@@ -35,7 +35,7 @@ services:
     stop_grace_period: 1m30s
     network_mode: bridge
     ports:
-      - '3010:3000'
+      - "3001:3000"
     env_file:
       - sqlpad.env
       - sqlpad.secrets.env

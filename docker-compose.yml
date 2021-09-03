@@ -5,7 +5,7 @@ version: "3.8"
 
 services:
   sqlserver01:
-    container_name: mssql-server-2019
+    container_name: sqlserver01
     image: jessenich91/mssql-server:latest
     restart: unless-stopped
     stop_grace_period: 1m30s
@@ -22,10 +22,11 @@ services:
       - "1433:1433"
       - "1434:1434"
     volumes:
-      - "sqldbsystem:/var/opt/mssql"
-      - "sqldbdata:/var/opt/mssql/data"
-      - "sqldblog:/var/opt/mssql/log"
-      - "sqldbbackup:/var/opt/mssql/backup"
+      - sqldata:/var/opt/mssql
+      #- "sqldbsystem:/var/opt/mssql"
+      # - "sqldbdata:/var/opt/mssql/data"
+      # - "sqldblog:/var/opt/mssql/log"
+      # - "sqldbbackup:/var/opt/mssql/backup"
 
   sqlpad:
     container_name: sqlpad
@@ -42,8 +43,9 @@ services:
       - sqlpad:/var/lib/sqlpad
 
 volumes:
-  sqldbsystem:
-  sqldbdata:
-  sqldblog:
-  sqldbbackup:
+  # sqldbsystem:
+  # sqldbdata:
+  # sqldblog:
+  # sqldbbackup:
   sqlpad:
+  sqldata:

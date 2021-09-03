@@ -4,27 +4,26 @@ FROM mcr.microsoft.com/mssql/server:"${VARIANT}"
 LABEL maintainer="Jesse N. <jesse@keplerdev.com>"
 LABEL org.opencontainers.image.source="https://github.com/jessenich/docker-mssql-server"
 
+# Sets default environment variables of the mssql image.
+ENV MSSQL_PID=Developer \
+    ACCEPT_EULA=Y \
+    SA_PASSWORD= \
+    DEBIAN_FRONTEND=noninteractive
+
 # Sets the database connection variables.
 ENV DB_MSSQL_USER=sa \
-    DB_MSSQL_PASSWORD= \
+    DB_MSSQL_PASSWORD="${DB_MSSQL_PASSWORD:-$SA_PASSWORD}" \
     DB_MSSQL_DATABASE=master \
     TZ="${TZ:-America/New_York}" \
     TERM="xterm-256color" \
     RUNNING_IN_DOCKER=true \
     HOME="${HOME:-/home/mssql}"
 
-# Sets default environment variables of the mssql image.
-ENV MSSQL_PID=Developer \
-    ACCEPT_EULA=Y \
-    SA_PASSWORD="${SA_PASSWORD:-DB_MSSQL_PASSWORD}"
-
 # Set default file locations
 # ENV MSSQL_BACKUP_DIR="/var/opt/mssql/backup" \
 #     MSSQL_DATA_DIR="/var/opt/mssql/data" \
 #     MSSQL_LOG_DIR="/var/opt/mssql/log" \
 #     DEBIAN_FRONTEND=noninteractive
-
-ENV MSSQL_DATA_DIR="/var/opt/mssql"
 
 USER root
 
@@ -88,10 +87,10 @@ RUN /bin/bash /usr/local/sbin/add-sudo-user.sh \
         --user root \
         --no-create-user \
         --no-sudo \
-        --shell /bin/zsh && \
-    /bin/bash /usr/local/sbin/mkdir-chown.sh \
-        --user mssql \
-        --dir "${MSSQL_DATA_DIR}"
+        --shell /bin/zsh
+    # /bin/bash /usr/local/sbin/mkdir-chown.sh \
+    #     --user mssql \
+    #     --dir "${MSSQL_DATA_DIR}"
     # /bin/bash /usr/local/sbin/mkdir-chown.sh \
     #     --user mssql \
     #     --dir "${MSSQL_BACKUP_DIR}" && \
@@ -106,7 +105,7 @@ RUN /bin/bash /usr/local/sbin/add-sudo-user.sh \
 #        "${MSSQL_DATA_DIR}" \
 #        "${MSSQL_LOG_DIR}"
 
-VOLUME "${MSSQL_DATA_DIR}"
+VOLUME /var/opt/mssql
 
 EXPOSE 1433
 EXPOSE 1434

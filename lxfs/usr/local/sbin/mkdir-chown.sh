@@ -5,7 +5,10 @@ __user= ;
 __dir= ;
 
 run() {
-    mkdir -p "${__dir}";
+    if [ ! -d "${__dir}" ]; then
+        mkdir -p "${__dir}";
+    fi
+
     chown "${__user}" "${__dir}";
     chown 10001:0 "${__dir}"
     exit 0;

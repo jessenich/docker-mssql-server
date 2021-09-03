@@ -16,7 +16,7 @@ ENV DB_MSSQL_USER=sa \
 # Sets default environment variables of the mssql image.
 ENV MSSQL_PID=Developer \
     ACCEPT_EULA=Y \
-    SA_PASSWORD=$DB_MSSQL_PASSWORD
+    SA_PASSWORD="${DB_MSSQL_PASSWORD}"
 
 # Set default file locations
 ENV MSSQL_BACKUP_DIR="/var/opt/mssql/backup" \
@@ -80,11 +80,24 @@ RUN dpkg -i packages-microsoft-prod.deb && \
 RUN pwsh -NoProfile -NonInteractive -NoLogo -File /usr/local/sbin/Install-DefaultModules.ps1
 
 # Create volume directories
-RUN /bin/bash /usr/local/sbin/add-sudo-user.sh --user mssql --no-create-user --shell /bin/zsh 2>&1 && \
-    /bin/bash /usr/local/sbin/add-sudo-user.sh --user root --no-create-user --shell /bin/zsh 2>&1 && \
-    /bin/bash /usr/local/sbin/mkdir-chown.sh mssql "${MSSQL_BACKUP_DIR}" && \
-    /bin/bash /usr/local/sbin/mkdir-chown.sh mssql "${MSSQL_DATA_DIR}" && \
-    /bin/bash /usr/local/sbin/mkdir-chown.sh mssql "${MSSQL_LOG_DIR}";
+RUN /bin/bash /usr/local/sbin/add-sudo-user.sh \
+        --user mssql \
+        --no-create-user \
+        --shell /bin/zsh && \
+    /bin/bash /usr/local/sbin/add-sudo-user.sh \
+        --user root \
+        --no-create-user \
+        --no-sudo \
+        --shell /bin/zsh && \
+    /bin/bash /usr/local/sbin/mkdir-chown.sh \
+        --user mssql \
+        --dir "${MSSQL_BACKUP_DIR}" && \
+    /bin/bash /usr/local/sbin/mkdir-chown.sh \
+        --user mssql \
+        --dir "${MSSQL_DATA_DIR}" && \
+    /bin/bash /usr/local/sbin/mkdir-chown.sh \
+        --user mssql \
+        --dir "${MSSQL_LOG_DIR}";
 
 VOLUME "${MSSQL_BACKUP_DIR}" \
        "${MSSQL_DATA_DIR}" \

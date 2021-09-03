@@ -87,7 +87,12 @@ RUN /bin/bash /usr/local/sbin/add-sudo-user.sh \
         --user root \
         --no-create-user \
         --no-sudo \
-        --shell /bin/zsh
+        --shell /bin/zsh && \
+        usermod --login mssql_2017 mssql && \
+        useradd -M -s /bin/bash -u 10001 -g 0 mssql && \
+        chgrp -R 0 /var/opt/mssql && \
+        chgrp -R 0 /var/opt/mssql_2019
+
     # /bin/bash /usr/local/sbin/mkdir-chown.sh \
     #     --user mssql \
     #     --dir "${MSSQL_DATA_DIR}"

@@ -26,6 +26,8 @@ ENV MSSQL_BACKUP_DIR="/var/opt/mssql/backup" \
 
 USER root
 
+RUN mkdir /.systen
+
 COPY ./lxfs /
 
 RUN apt-get update && \

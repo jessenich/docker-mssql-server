@@ -16,17 +16,17 @@ ENV DB_MSSQL_USER=sa \
 # Sets default environment variables of the mssql image.
 ENV MSSQL_PID=Developer \
     ACCEPT_EULA=Y \
-    SA_PASSWORD="${DB_MSSQL_PASSWORD}"
+    SA_PASSWORD="${SA_PASSWORD:-DB_MSSQL_PASSWORD}"
 
 # Set default file locations
-ENV MSSQL_BACKUP_DIR="/var/opt/mssql/backup" \
-    MSSQL_DATA_DIR="/var/opt/mssql/data" \
-    MSSQL_LOG_DIR="/var/opt/mssql/log" \
-    DEBIAN_FRONTEND=noninteractive
+# ENV MSSQL_BACKUP_DIR="/var/opt/mssql/backup" \
+#     MSSQL_DATA_DIR="/var/opt/mssql/data" \
+#     MSSQL_LOG_DIR="/var/opt/mssql/log" \
+#     DEBIAN_FRONTEND=noninteractive
+
+ENV MSSQL_DATA_DIR="/var/opt/mssql"
 
 USER root
-
-RUN mkdir /.systen
 
 COPY ./lxfs /
 
@@ -91,17 +91,22 @@ RUN /bin/bash /usr/local/sbin/add-sudo-user.sh \
         --shell /bin/zsh && \
     /bin/bash /usr/local/sbin/mkdir-chown.sh \
         --user mssql \
-        --dir "${MSSQL_BACKUP_DIR}" && \
-    /bin/bash /usr/local/sbin/mkdir-chown.sh \
-        --user mssql \
-        --dir "${MSSQL_DATA_DIR}" && \
-    /bin/bash /usr/local/sbin/mkdir-chown.sh \
-        --user mssql \
-        --dir "${MSSQL_LOG_DIR}";
+        --dir "${MSSQL_DATA_DIR}"
+    # /bin/bash /usr/local/sbin/mkdir-chown.sh \
+    #     --user mssql \
+    #     --dir "${MSSQL_BACKUP_DIR}" && \
+    # /bin/bash /usr/local/sbin/mkdir-chown.sh \
+    #     --user mssql \
+    #     --dir "${MSSQL_DATA_DIR}" && \
+    # /bin/bash /usr/local/sbin/mkdir-chown.sh \
+    #     --user mssql \
+    #     --dir "${MSSQL_LOG_DIR}";
 
-VOLUME "${MSSQL_BACKUP_DIR}" \
-       "${MSSQL_DATA_DIR}" \
-       "${MSSQL_LOG_DIR}"
+# VOLUME "${MSSQL_BACKUP_DIR}" \
+#        "${MSSQL_DATA_DIR}" \
+#        "${MSSQL_LOG_DIR}"
+
+VOLUME "${MSSQL_DATA_DIR}"
 
 EXPOSE 1433
 EXPOSE 1434

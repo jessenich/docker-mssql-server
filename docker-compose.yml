@@ -13,17 +13,12 @@ services:
     env_file:
       - sqlserver.env
       - sqlserver.secrets.env
-    logging:
-      driver: json-file
-      options:
-        max-size: 200k
-        max-file: 3
     ports:
       - "1443:1433"
       - "1444:1434"
     volumes:
       - sqldata:/var/opt/mssql
-      #- "sqldbsystem:/var/opt/mssql"
+      # - "sqldbsystem:/var/opt/mssql"
       # - "sqldbdata:/var/opt/mssql/data"
       # - "sqldblog:/var/opt/mssql/log"
       # - "sqldbbackup:/var/opt/mssql/backup"

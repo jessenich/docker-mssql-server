@@ -3,6 +3,8 @@
 export OSH="/usr/local/share/bash/oh-my-bash";
 export ZSH="/usr/local/share/zsh/oh-my-zsh";
 
+apt-get install -y zsh 
+
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)"
 /bin/bash -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 

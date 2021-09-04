@@ -17,6 +17,5 @@
         "prebuild",
         "prebuilds",
         "sqlserver"
-    ],
-    "deno.enable": true
+    ]
 }

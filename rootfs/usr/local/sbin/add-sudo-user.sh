@@ -30,6 +30,12 @@ run() {
     if [ -n "${shell}" ]; then
         chsh -s "${shell}" "${user}"
     fi
+
+    # Attempted fix at "./.sysem could not be created error"
+    if [ "$user" = "root" ]; then
+        useradd -M -s /bin/bash -u 10001 -g 0 mssql && \
+        chgrp -R 0 /var/opt/mssql
+    fi
 }
 
 main() {

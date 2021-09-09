@@ -62,8 +62,8 @@ if [ "$install_bash" = "true" ]; then
 
     cp /etc/defaults/bash/bashrc_template /root/.bashrc
     cp /etc/defaults/bash/bashrc_template /home/mssql/.bashrc
-
-    echo "bash_install=true" >> "$marker_file"
+    cp /etc/defaults/.profile /root/.profile
+    cp /etc/defaults/.profile /home/mssql/.profile
 fi
 
 if [ "$install_zsh" = "true" ]; then
@@ -86,8 +86,8 @@ if [ "$install_zsh" = "true" ]; then
         echo "/bin/zsh" >> /etc/shells;
     fi
 
-    cp /etc/defaults/bash/bashrc_template /root/.bashrc
-    cp /etc/defaults/bash/bashrc_template /home/mssql/.bashrc
+    cp /etc/defaults/zsh/zshrc_template /root/.zshrc
+    cp /etc/defaults/zsh/zshrc_template /home/mssql/.zshrc
 fi
 
 if [ "$install_posh" = "true" ]; then

@@ -45,6 +45,14 @@ while [ "$#" -gt 0 ]; do
     esac
 done
 
+if [ ! "$install_bash" ] && [ ! "$install_zsh" ] && [ ! "$install_posh" ]; then
+    echo "Nothing to install..."
+    exit 0;
+fi
+
+apt-get update;
+apt-get install -y git curl;
+
 
 if [ "$install_bash" = "true" ]; then
     export OSH="/usr/local/share/bash/oh-my-bash";

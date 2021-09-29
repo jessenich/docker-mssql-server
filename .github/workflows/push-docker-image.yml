@@ -11,11 +11,13 @@ on:
 env:
   DOCKERHUB_LIBRARY: jessenich91
   DOCKERHUB_REPO: mssql-server
+  DOCKERHUB_URI: docker.io
   GHCR_LIBRARY: jessenich
   GHCR_REPO: mssql-server
   GHCR_URI: ghcr.io
   LABELS: |
     maintainer=Jesse N. <jesse@keplerdev.com>
+    org.opencontainers.image.source=https://github.com/jessenich/docker-mssql-server
 
 jobs:
   build-docker-image:
@@ -58,7 +60,7 @@ jobs:
         uses: docker/metadata-action@v3
         with:
           images: |
-            "${{ env.DOCKERHUB_LIBRARY }}/${{ env.DOCKERHUB_REPO }}"
+            "${{ env.DOCKERHUB_URI }}/${{ env.DOCKERHUB_LIBRARY }}/${{ env.DOCKERHUB_REPO }}"
             "${{ env.GHCR_URI }}/${{ env.GHCR_LIBRARY }}/${{ env.GHCR_REPO }}"
           tags: |
             type=raw,enable=${{ contains(matrix.sql-variant, '2019') }},priority=100,value=latest

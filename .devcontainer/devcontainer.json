@@ -18,7 +18,19 @@
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
 		"ms-azuretools.vscode-docker",
-		"timonwong.shellcheck"
+		"formulahendry.docker-explorer",
+		
+		// Includes:
+		// shell-format, bash IDE, PowerShell, shellman, Bash Debug, Shebang Snippets, Shellcheck
+		"lizebang.bash-extension-pack",
+		
+		"ms-kubernetes-tools.vscode-aks-tools",
+		"tetradresearch.vscode-h2o",
+		"shakram02.bash-beautify",
+		"deepinthought.vscode-shell-snippets",
+		"evgeniypeshkov.syntax-highlighter",
+		"bmalehorn.shell-syntax",
+
 	],
 	
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.

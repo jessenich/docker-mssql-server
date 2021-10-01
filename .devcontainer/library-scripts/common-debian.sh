@@ -18,7 +18,7 @@ USER_GID=${4:-"automatic"}
 UPGRADE_PACKAGES=${5:-"true"}
 INSTALL_OH_MYS=${6:-"true"}
 ADD_NON_FREE_PACKAGES=${7:-"false"}
-SCRIPT_DIR="$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 MARKER_FILE="/usr/local/etc/vscode-dev-containers/common"
 
 if [ "$(id -u)" -ne 0 ]; then

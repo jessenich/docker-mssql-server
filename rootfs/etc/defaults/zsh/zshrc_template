@@ -48,6 +48,6 @@ if [ -f "${HOME}/.zsh_aliases" ]; then
 fi
 
 # Import oh-my-zsh
-if [ =f "/usr/share/zsh/zshrc.ohmyzsh.sh" ]; then
+if [ -f "/usr/share/zsh/zshrc.ohmyzsh.sh" ]; then
     . "/usr/share/zsh/zshrc.ohmyzsh.sh";
 fi
